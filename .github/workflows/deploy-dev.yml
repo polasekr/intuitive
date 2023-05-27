@@ -1,0 +1,14 @@
+name: Deploy dev
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run_deploy_workflow:
+    uses: ./.github/workflows/deploy.yml
+    with:
+      azure_tenant:   ${{ vars.tenant }}
+    secrets:
+      az_client_id:      ${{ secrets.client_id }} 
+      az_client_secret:  ${{ secrets.client_secret }}
+
