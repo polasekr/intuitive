@@ -12,14 +12,16 @@ FROM ubuntu:22.04
 LABEL end="dev"
 LABEL maintainer="email@outlook.com"
 
-RUN apt-get update && apt-get install -y \
-    curl iproute2 sshfs unzip less groff
+RUN apt-get update \
+&&  apt-get -y --no-install-recommends --no-install-suggests install \
+    curl iproute2 sshfs unzip less groff ca-certificates \
+&&  apt-get clean \
+&&  rm -rf /var/lib/apt/lists/*
 
-RUN apt-get clean
-
-RUN curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl" \
-    && chmod +x ./kubectl \
-    && mv ./kubectl /usr/local/bin/kubectl && kubectl version --client
+RUN KUBECTL=/usr/local/bin/kubectl \
+&&  curl -L "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl" -o $KUBECTL \
+&&  chmod +x $KUBECTL \
+&&  kubectl version --client
 
 RUN curl https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o /tmp/awscli-linux.zip \
     && cd /tmp && unzip awscli-linux.zip && ./aws/install && rm -rf ./aws
