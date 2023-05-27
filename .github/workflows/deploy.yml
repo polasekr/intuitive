@@ -37,6 +37,11 @@ jobs:
        working-directory: terraform
        id: init
        run: terraform init
+       env:
+        ARM_CLIENT_ID: ${{ secrets.az_client_id }} 
+        ARM_CLIENT_SECRET: ${{ secrets.az_client_secret }}
+        ARM_SUBSCRIPTION_ID: ${{ inputs.azure_subscription }}
+        ARM_TENANT_ID: ${{ inputs.azure_tenant }}
 
      - name: Terraform format
        working-directory: terraform
