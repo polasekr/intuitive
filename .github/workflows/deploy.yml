@@ -9,10 +9,10 @@ on:
         type: string
     secrets:
       az_client_id:
-        description: "Azure AD Client ID for ACR access"
+        description: "Azure AD Client ID"
         required: true
       az_client_secret:
-        description: "Azure AD Client secret for ACR access"
+        description: "Azure AD Client secret"
         required: true
 
 jobs:
