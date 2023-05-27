@@ -20,17 +20,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-        with:
-          ref: ${{ inputs.branch }}
+     - uses: actions/checkout@v2
+       with:
+         ref: ${{ inputs.branch }}
 
-      - name: Azure login
-        id: acr_auth
-        uses: azure/CLI@v1
-        with:
-          azcliversion: 2.30.0
-          inlineScript: |
-            az login --service-principal -u ${{ secrets.az_client_id }} -p ${{ secrets.az_client_secret }} --tenant ${{ inputs.azure_tenant }}
+     - name: Azure login
+       id: acr_auth
+       uses: azure/CLI@v1
+       with:
+         azcliversion: 2.30.0
+         inlineScript: |
+           az login --service-principal -u ${{ secrets.az_client_id }} -p ${{ secrets.az_client_secret }} --tenant ${{ inputs.azure_tenant }}
 
      - name: Setup Terraform with specified version on the runner
        uses: hashicorp/setup-terraform@v2
