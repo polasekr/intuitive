@@ -1,12 +1,7 @@
 # Custom Data 
 locals {
-  vm_custom_data = <<CUSTOM_DATA
-    #!/bin/sh
-    #sudo yum update -y
-    sudo yum install -y httpd
-    sudo systemctl enable httpd
-    sudo systemctl start httpd
-    CUSTOM_DATA  
+  vm_custom_data = filebase64("${path.module}/from-script.sh")
+  custom_data    = var.custom_data_override != "" ? var.custom_data_override : local.vm_custom_data
 }
 
 resource "azurerm_linux_virtual_machine" "web_linuxvm" {
@@ -15,11 +10,11 @@ resource "azurerm_linux_virtual_machine" "web_linuxvm" {
   name                  = "linuxvm-${count.index}"
   resource_group_name   = var.resource_group_name
   location              = var.location
-  size                  = "Standard_DS1_v2"
-  admin_username        = "azureuser"
+  size                  = var.vm_size
+  admin_username        = var.vm_username
   network_interface_ids = [element(var.nics, count.index)]
   admin_ssh_key {
-    username   = "azureuser"
+    username   = var.vm_username
     public_key = file("${path.module}/ssh-keys/vm-ssh.pub")
   }
   os_disk {
@@ -33,9 +28,5 @@ resource "azurerm_linux_virtual_machine" "web_linuxvm" {
     version   = "latest"
   }
 
-  custom_data = base64encode(local.vm_custom_data)
-  /*
-  can do custom_data = filebase64("${path.module}/from-script.sh")
-  would be better 
-  */
+  custom_data = base64encode(local.custom_data)
 }

@@ -49,7 +49,7 @@ resource "azurerm_network_interface" "netowrk-interface" {
 }
 
 locals {
-  app_inbound_ports_map = {
+  app_inbound_ports_map = length(var.inboud_ports) > 0 ? var.inboud_ports : {
     "100" : "80",
     "110" : "443",
     "120" : "8080",
